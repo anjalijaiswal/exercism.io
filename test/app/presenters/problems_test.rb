@@ -10,10 +10,6 @@ class PresentersProblemsTest < Minitest::Test
   include Rack::Test::Methods
   include DBCleaner
 
-  def app
-    ExercismWeb::App
-  end
-
   def test_knows_its_track_id
     track = ExercismWeb::Presenters::Special::Problems.new("ruby")
     assert_equal "ruby", track.track_id
@@ -25,7 +21,6 @@ class PresentersProblemsTest < Minitest::Test
 
   def test_that_fetch_all_problems_can_get_all_problems
     Xapi.stub(:get, [200, all_problems_json]) do
-      get '/problems'
       problems = ExercismWeb::Presenters::Special::Problems.new('ruby')
       assert_includes problems.fetch_all_problems.to_s, '"slug"=>"zipper"'
     end
@@ -33,7 +28,6 @@ class PresentersProblemsTest < Minitest::Test
 
   def test_can_return_problems_for_specific_track
     Xapi.stub(:get, [200, all_problems_json]) do
-      get '/languages/ruby'
       problems = ExercismWeb::Presenters::Special::Problems.new('ruby')
       assert_includes problems.track_problems.to_s, "Write a program that implements a binary search algorithm."
     end
